@@ -41,8 +41,6 @@ app.use(cors({
   methods: ['GET','POST','PUT','DELETE','OPTIONS'], // allow preflight methods
 }))
 
-
-
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
