@@ -1,0 +1,98 @@
+{
+  "header": {
+    "tagline": "Authentic flavors",
+    "menu": "Menu",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "My Profile",
+    "orders": "My Orders"
+  },
+  "hero": {
+    "title": "Savor the Authentic",
+    "subtitle": "Lebanese Shawarma",
+    "description": "Discover our shawarmas prepared with fresh ingredients and traditional spices. Customize your order and savor excellence with every bite.",
+    "orderNow": "Order Now",
+    "viewMenu": "View Menu",
+    "stats": {
+      "orders": "Orders delivered",
+      "rating": "Average rating",
+      "time": "Preparation time"
+    }
+  },
+  "menu": {
+    "title": "Our Menu",
+    "description": "Discover our selection of authentic dishes prepared with passion and quality ingredients",
+    "search": "Search for a dish...",
+    "categories": {
+      "all": "All",
+      "shawarma": "Shawarmas",
+      "vegetarian": "Vegetarian",
+      "grilled": "Grilled",
+      "appetizers": "Appetizers"
+    },
+    "quickAdd": "Quick Add",
+    "customize": "Customize",
+    "noResults": "No products found",
+    "noResultsDesc": "Try modifying your search criteria or selecting another category",
+    "resetFilters": "Reset filters"
+  },
+  "product": {
+    "size": "Choose your size",
+    "sizes": {
+      "small": "Small",
+      "medium": "Medium",
+      "large": "Large",
+      "smallDesc": "Perfect for a snack",
+      "mediumDesc": "Recommended standard size",
+      "largeDesc": "For big appetites"
+    },
+    "toppings": "Toppings",
+    "toppingsSelected": "selected",
+    "instructions": "Special instructions (optional)",
+    "instructionsPlaceholder": "Ex: No onions, sauce on the side...",
+    "quantity": "Quantity:",
+    "addToCart": "Add",
+    "unavailable": "Unavailable"
+  },
+  "cart": {
+    "title": "Your Cart",
+    "empty": "Your cart is empty",
+    "emptyDesc": "Add some delicious shawarmas to get started",
+    "size": "Size:",
+    "total": "Total",
+    "placeOrder": "Place Order",
+    "continueShopping": "Continue Shopping"
+  },
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "name": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "phone": "Phone",
+    "address": "Address",
+    "loginButton": "Sign In",
+    "registerButton": "Sign Up",
+    "forgotPassword": "Forgot password?",
+    "noAccount": "No account?",
+    "hasAccount": "Already have an account?",
+    "loginHere": "Login here",
+    "registerHere": "Register here"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "deliveryAddress": "Delivery Address",
+    "paymentMethod": "Payment Method",
+    "creditCard": "Credit Card",
+    "mobileMoney": "Mobile Money",
+    "cashOnDelivery": "Cash on Delivery",
+    "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "deliveryFee": "Delivery Fee",
+    "total": "Total",
+    "placeOrder": "Place Order"
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "header": {
+    "tagline": "Saveurs authentiques",
+    "menu": "Menu",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "logout": "Déconnexion",
+    "profile": "Mon profil",
+    "orders": "Mes commandes"
+  },
+  "hero": {
+    "title": "Savourez l'Authentique",
+    "subtitle": "Shawarma camerounais",
+    "description": "Découvrez nos shawarmas préparés avec des ingrédients frais et des épices traditionnelles. Personnalisez votre commande et savourez l'excellence à chaque bouchée.",
+    "orderNow": "Commander Maintenant",
+    "viewMenu": "Voir le Menu",
+    "stats": {
+      "orders": "Commandes livrées",
+      "rating": "Note moyenne",
+      "time": "Temps de préparation"
+    }
+  },
+  "menu": {
+    "title": "Notre Menu",
+    "description": "Découvrez notre sélection de plats authentiques préparés avec passion et des ingrédients de qualité",
+    "search": "Rechercher un plat...",
+    "categories": {
+      "all": "Tout",
+      "shawarma": "Shawarmas",
+      "vegetarian": "Végétarien",
+      "grilled": "Grillades",
+      "appetizers": "Entrées"
+    },
+    "quickAdd": "Ajout rapide",
+    "customize": "Personnaliser",
+    "noResults": "Aucun produit trouvé",
+    "noResultsDesc": "Essayez de modifier vos critères de recherche ou de sélectionner une autre catégorie",
+    "resetFilters": "Réinitialiser les filtres"
+  },
+  "product": {
+    "size": "Choisissez votre taille",
+    "sizes": {
+      "small": "Petit",
+      "medium": "Moyen",
+      "large": "Grand",
+      "smallDesc": "Parfait pour une collation",
+      "mediumDesc": "Taille standard recommandée",
+      "largeDesc": "Pour les gros appétits"
+    },
+    "toppings": "Garnitures",
+    "toppingsSelected": "sélectionnées",
+    "instructions": "Instructions spéciales (optionnel)",
+    "instructionsPlaceholder": "Ex: Sans oignons, sauce à part...",
+    "quantity": "Quantité:",
+    "addToCart": "Ajouter",
+    "unavailable": "Non disponible"
+  },
+  "cart": {
+    "title": "Votre Panier",
+    "empty": "Votre panier est vide",
+    "emptyDesc": "Ajoutez des délicieux shawarmas pour commencer",
+    "size": "Taille:",
+    "total": "Total",
+    "placeOrder": "Passer la commande",
+    "continueShopping": "Continuer les achats"
+  },
+  "auth": {
+    "login": "Connexion",
+    "register": "Inscription",
+    "name": "Nom complet",
+    "email": "Email",
+    "password": "Mot de passe",
+    "confirmPassword": "Confirmer le mot de passe",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "loginButton": "Se connecter",
+    "registerButton": "S'inscrire",
+    "forgotPassword": "Mot de passe oublié?",
+    "noAccount": "Pas de compte?",
+    "hasAccount": "Déjà un compte?",
+    "loginHere": "Connectez-vous ici",
+    "registerHere": "Inscrivez-vous ici"
+  },
+  "checkout": {
+    "title": "Finaliser la commande",
+    "deliveryAddress": "Adresse de livraison",
+    "paymentMethod": "Mode de paiement",
+    "creditCard": "Carte bancaire",
+    "mobileMoney": "Mobile Money",
+    "cashOnDelivery": "Paiement à la livraison",
+    "orderSummary": "Résumé de la commande",
+    "subtotal": "Sous-total",
+    "deliveryFee": "Frais de livraison",
+    "total": "Total",
+    "placeOrder": "Confirmer la commande"
+  }
+}
