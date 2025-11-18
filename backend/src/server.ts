@@ -1,8 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import mongoose from 'mongoose';
+//import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+const { MongoClient, ServerApiVersion } = require('mongodb');
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -80,9 +81,28 @@ app.use((req, res) => {
 const connectDB = async () => {
   try {
     const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/shawarma';
-    await mongoose.connect(mongoURI);
-    console.log('✅ MongoDB connected successfully');
+
+    const client = new MongoClient(mongoURI, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    });
+
+    try {
+      // Connect the client to the server	(optional starting in v4.7)
+      await client.connect();
+      // Send a ping to confirm a successful connection
+      await client.db("admin").command({ ping: 1 });
+      console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close();
+    }
+
   } catch (error) {
+
     console.error('❌ MongoDB connection error:', error);
     // Don't exit in development, just log the error
     if (process.env.NODE_ENV === 'production') {
