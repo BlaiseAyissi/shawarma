@@ -147,6 +147,5 @@ OrderSchema.pre('validate', async function(next) {
 // Index for efficient queries
 OrderSchema.index({ userId: 1, createdAt: -1 });
 OrderSchema.index({ status: 1 });
-OrderSchema.index({ orderNumber: 1 });
 
 export default mongoose.model<IOrder>('Order', OrderSchema);
