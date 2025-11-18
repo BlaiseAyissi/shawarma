@@ -78,7 +78,9 @@ app.use((req, res) => {
 });
 
 // Database connection
+let isConnected = false;
 const connectDB = async () => {
+  if (isConnected) return;
   try {
     const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/shawarma';
 
@@ -95,6 +97,7 @@ const connectDB = async () => {
       await client.connect();
       // Send a ping to confirm a successful connection
       await client.db("admin").command({ ping: 1 });
+      isConnected = true;
       console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
       // Ensures that the client will close when you finish/error
@@ -112,10 +115,7 @@ const connectDB = async () => {
 };
 
 
-
-// Start server
-const startServer = async () => {
-  await connectDB();
+connectDB();
   
   //app.listen(PORT, () => {
   //  console.log(`🚀 Server running on port ${PORT}`);
@@ -123,7 +123,5 @@ const startServer = async () => {
   //  console.log(`🔗 API URL: http://localhost:${PORT}/api`);
   //  console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
   //});
-};
 
-startServer()
 export default app;
