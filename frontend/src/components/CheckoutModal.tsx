@@ -247,24 +247,25 @@ const CheckoutModal: React.FC = () => {
                         {t('checkout.paymentMethod')}
                       </h3>
                       <div className="space-y-3">
+                      
                         <label className="flex items-center p-4 border border-secondary-200 rounded-lg cursor-pointer hover:border-primary-300 transition-colors">
                           <input
                             type="radio"
                             name="paymentMethod"
-                            value="stripe"
-                            checked={paymentMethod === 'stripe'}
+                            value="momo"
+                            checked={paymentMethod === 'momo'}
                             onChange={(e) => setPaymentMethod(e.target.value as any)}
                             className="mr-3"
                           />
-                          <CreditCardIcon className="w-5 h-5 mr-3 text-secondary-600" />
-                          <span className="font-medium">{t('checkout.creditCard')}</span>
+                          <DevicePhoneMobileIcon className="w-5 h-5 mr-3 text-secondary-600" />
+                          <span className="font-medium">{t('checkout.mobileMoney')}</span>
                         </label>
 
                         <label className="flex items-center p-4 border border-secondary-200 rounded-lg cursor-pointer hover:border-primary-300 transition-colors">
                           <input
                             type="radio"
                             name="paymentMethod"
-                            value="momo"
+                            value="OM"
                             checked={paymentMethod === 'momo'}
                             onChange={(e) => setPaymentMethod(e.target.value as any)}
                             className="mr-3"

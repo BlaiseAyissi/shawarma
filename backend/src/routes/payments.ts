@@ -7,10 +7,8 @@ const router = express.Router();
 
 // Note: Stripe integration disabled for now
 // Initialize Stripe when needed:
-// import Stripe from 'stripe';
-// const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-//   apiVersion: '2023-10-16'
-// });
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {});
 
 // @route   POST /api/payments/stripe/create-intent
 // @desc    Create Stripe payment intent
