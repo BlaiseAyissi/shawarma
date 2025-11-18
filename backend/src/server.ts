@@ -111,16 +111,19 @@ const connectDB = async () => {
   }
 };
 
+
+
 // Start server
 const startServer = async () => {
   await connectDB();
   
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-    console.log(`🔗 API URL: http://localhost:${PORT}/api`);
-    console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
-  });
+  //app.listen(PORT, () => {
+  //  console.log(`🚀 Server running on port ${PORT}`);
+  // console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+  //  console.log(`🔗 API URL: http://localhost:${PORT}/api`);
+  //  console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
+  //});
 };
 
-startServer().catch(console.error);
+startServer()
+export default app;
