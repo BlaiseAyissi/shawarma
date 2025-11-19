@@ -24,18 +24,14 @@ app.use(helmet());
 const allowedOrigins = [
   process.env.FRONTEND_URL // production frontend
 ];
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allow non-browser requests
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true, // allow cookies/auth headers
-  methods: ['GET','POST','PUT','DELETE','OPTIONS'], // allow preflight methods
-}))
+
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    credentials: true
+  })
+);
 
 // Body parsing middleware
 app.use(express.json({ limit: '10mb' }));
