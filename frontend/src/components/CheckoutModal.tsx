@@ -25,6 +25,16 @@ const CheckoutModal: React.FC = () => {
     phone: user?.phone || '',
     instructions: ''
   });
+  const [errors, setErrors] = useState({
+    street: false,
+    city: false,
+    phone: false
+  });
+  const [touched, setTouched] = useState({
+    street: false,
+    city: false,
+    phone: false
+  });
 
   // Load WhatsApp number from settings
   useEffect(() => {
@@ -51,14 +61,61 @@ const CheckoutModal: React.FC = () => {
   const finalTotal = total + deliveryFee;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
     setDeliveryAddress({
       ...deliveryAddress,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    
+    // Clear error when user starts typing
+    if (errors[name as keyof typeof errors]) {
+      setErrors({
+        ...errors,
+        [name]: false
+      });
+    }
+  };
+
+  const handleBlur = (field: keyof typeof errors) => {
+    setTouched({
+      ...touched,
+      [field]: true
+    });
+    
+    // Validate on blur
+    const value = deliveryAddress[field];
+    setErrors({
+      ...errors,
+      [field]: !value || value.trim().length === 0
+    });
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      street: !deliveryAddress.street || deliveryAddress.street.trim().length < 5,
+      city: !deliveryAddress.city || deliveryAddress.city.trim().length < 2,
+      phone: !deliveryAddress.phone || deliveryAddress.phone.trim().length === 0
+    };
+    
+    setErrors(newErrors);
+    setTouched({
+      street: true,
+      city: true,
+      phone: true
+    });
+    
+    return !Object.values(newErrors).some(error => error);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form before submitting
+    if (!validateForm()) {
+      toast.error('Veuillez remplir tous les champs obligatoires');
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
@@ -203,33 +260,51 @@ const CheckoutModal: React.FC = () => {
                         {t('checkout.deliveryAddress')}
                       </h3>
                       <div className="space-y-4">
-                        <input
-                          type="text"
-                          name="street"
-                          value={deliveryAddress.street}
-                          onChange={handleInputChange}
-                          required
-                          className="input-field"
-                          placeholder="Rue, quartier..."
-                        />
-                        <input
-                          type="text"
-                          name="city"
-                          value={deliveryAddress.city}
-                          onChange={handleInputChange}
-                          required
-                          className="input-field"
-                          placeholder="Ville"
-                        />
-                        <input
-                          type="tel"
-                          name="phone"
-                          value={deliveryAddress.phone}
-                          onChange={handleInputChange}
-                          required
-                          className="input-field"
-                          placeholder="Téléphone"
-                        />
+                        <div>
+                          <input
+                            type="text"
+                            name="street"
+                            value={deliveryAddress.street}
+                            onChange={handleInputChange}
+                            onBlur={() => handleBlur('street')}
+                            required
+                            className={`input-field ${touched.street && errors.street ? 'border-red-500 ring-2 ring-red-200' : ''}`}
+                            placeholder="Rue, quartier..."
+                          />
+                          {touched.street && errors.street && (
+                            <p className="text-red-500 text-sm mt-1">L'adresse doit contenir au moins 5 caractères</p>
+                          )}
+                        </div>
+                        <div>
+                          <input
+                            type="text"
+                            name="city"
+                            value={deliveryAddress.city}
+                            onChange={handleInputChange}
+                            onBlur={() => handleBlur('city')}
+                            required
+                            className={`input-field ${touched.city && errors.city ? 'border-red-500 ring-2 ring-red-200' : ''}`}
+                            placeholder="Ville"
+                          />
+                          {touched.city && errors.city && (
+                            <p className="text-red-500 text-sm mt-1">La ville est obligatoire</p>
+                          )}
+                        </div>
+                        <div>
+                          <input
+                            type="tel"
+                            name="phone"
+                            value={deliveryAddress.phone}
+                            onChange={handleInputChange}
+                            onBlur={() => handleBlur('phone')}
+                            required
+                            className={`input-field ${touched.phone && errors.phone ? 'border-red-500 ring-2 ring-red-200' : ''}`}
+                            placeholder="Téléphone"
+                          />
+                          {touched.phone && errors.phone && (
+                            <p className="text-red-500 text-sm mt-1">Le numéro de téléphone est obligatoire</p>
+                          )}
+                        </div>
                         <textarea
                           name="instructions"
                           value={deliveryAddress.instructions}

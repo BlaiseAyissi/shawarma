@@ -18,16 +18,107 @@ const AuthModal: React.FC = () => {
     phone: '',
     address: ''
   });
+  const [errors, setErrors] = useState({
+    name: false,
+    email: false,
+    password: false,
+    confirmPassword: false
+  });
+  const [touched, setTouched] = useState({
+    name: false,
+    email: false,
+    password: false,
+    confirmPassword: false
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: value
     });
+    
+    // Clear error when user starts typing
+    if (errors[name as keyof typeof errors]) {
+      setErrors({
+        ...errors,
+        [name]: false
+      });
+    }
+  };
+
+  const handleBlur = (field: keyof typeof errors) => {
+    setTouched({
+      ...touched,
+      [field]: true
+    });
+    
+    // Validate on blur
+    validateField(field);
+  };
+
+  const validateField = (field: keyof typeof errors) => {
+    let isValid = true;
+    
+    switch (field) {
+      case 'name':
+        isValid = formData.name.trim().length >= 2;
+        break;
+      case 'email':
+        isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email);
+        break;
+      case 'password':
+        isValid = formData.password.length >= 6;
+        break;
+      case 'confirmPassword':
+        isValid = formData.confirmPassword === formData.password;
+        break;
+    }
+    
+    setErrors({
+      ...errors,
+      [field]: !isValid
+    });
+    
+    return isValid;
+  };
+
+  const validateForm = () => {
+    const fields: (keyof typeof errors)[] = authModalMode === 'login' 
+      ? ['email', 'password']
+      : ['name', 'email', 'password', 'confirmPassword'];
+    
+    const newErrors = { ...errors };
+    let isValid = true;
+    
+    fields.forEach(field => {
+      const fieldValid = validateField(field);
+      if (!fieldValid) {
+        newErrors[field] = true;
+        isValid = false;
+      }
+    });
+    
+    setErrors(newErrors);
+    setTouched({
+      name: true,
+      email: true,
+      password: true,
+      confirmPassword: true
+    });
+    
+    return isValid;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form before submitting
+    if (!validateForm()) {
+      toast.error('Veuillez corriger les erreurs dans le formulaire');
+      return;
+    }
+    
     setIsLoading(true);
 
     try {
@@ -106,10 +197,14 @@ const AuthModal: React.FC = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
+                      onBlur={() => handleBlur('name')}
                       required
-                      className="input-field"
+                      className={`input-field ${touched.name && errors.name ? 'border-red-500 ring-2 ring-red-200' : ''}`}
                       placeholder="Jean Dupont"
                     />
+                    {touched.name && errors.name && (
+                      <p className="text-red-500 text-sm mt-1">Le nom doit contenir au moins 2 caractères</p>
+                    )}
                   </div>
                 )}
 
@@ -122,10 +217,14 @@ const AuthModal: React.FC = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
+                    onBlur={() => handleBlur('email')}
                     required
-                    className="input-field"
+                    className={`input-field ${touched.email && errors.email ? 'border-red-500 ring-2 ring-red-200' : ''}`}
                     placeholder="jean@example.com"
                   />
+                  {touched.email && errors.email && (
+                    <p className="text-red-500 text-sm mt-1">Veuillez entrer une adresse email valide</p>
+                  )}
                 </div>
 
                 <div>
@@ -138,8 +237,9 @@ const AuthModal: React.FC = () => {
                       name="password"
                       value={formData.password}
                       onChange={handleInputChange}
+                      onBlur={() => handleBlur('password')}
                       required
-                      className="input-field pr-12"
+                      className={`input-field pr-12 ${touched.password && errors.password ? 'border-red-500 ring-2 ring-red-200' : ''}`}
                       placeholder="••••••••"
                     />
                     <button
@@ -154,6 +254,9 @@ const AuthModal: React.FC = () => {
                       )}
                     </button>
                   </div>
+                  {touched.password && errors.password && (
+                    <p className="text-red-500 text-sm mt-1">Le mot de passe doit contenir au moins 6 caractères</p>
+                  )}
                 </div>
 
                 {authModalMode === 'register' && (
@@ -167,10 +270,14 @@ const AuthModal: React.FC = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleInputChange}
+                        onBlur={() => handleBlur('confirmPassword')}
                         required
-                        className="input-field"
+                        className={`input-field ${touched.confirmPassword && errors.confirmPassword ? 'border-red-500 ring-2 ring-red-200' : ''}`}
                         placeholder="••••••••"
                       />
+                      {touched.confirmPassword && errors.confirmPassword && (
+                        <p className="text-red-500 text-sm mt-1">Les mots de passe ne correspondent pas</p>
+                      )}
                     </div>
 
                     <div>
