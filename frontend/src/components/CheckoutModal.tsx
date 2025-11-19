@@ -186,8 +186,16 @@ const CheckoutModal: React.FC = () => {
         const encodedMessage = encodeURIComponent(whatsappMessage);
         const whatsappUrl = `https://wa.me/${whatsappNumber.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
 
-        // Open WhatsApp in new tab
-        window.open(whatsappUrl, '_blank');
+        // Open WhatsApp - use different method for mobile
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        
+        if (isMobile) {
+          // On mobile, use direct navigation for better compatibility
+          window.location.href = whatsappUrl;
+        } else {
+          // On desktop, open in new tab
+          window.open(whatsappUrl, '_blank');
+        }
       }
 
       clearCart();
