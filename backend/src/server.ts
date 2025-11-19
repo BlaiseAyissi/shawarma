@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 
 const allowedOrigins = [
-  `${process.env.FRONTEND_URL}/api`, // production frontend
+  process.env.FRONTEND_URL, // production frontend
 ].filter(Boolean); // Remove undefined values
 
 app.use(
@@ -30,7 +30,8 @@ app.use(
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
-
+      
+      console.log('the origin is '+origin)
       if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
