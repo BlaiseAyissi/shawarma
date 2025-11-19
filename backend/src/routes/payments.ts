@@ -116,7 +116,7 @@ router.post('/stripe/confirm', [
 
     // Verify payment intent
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
-    
+
     if (paymentIntent.status !== 'succeeded') {
       return res.status(400).json({
         success: false,
@@ -127,7 +127,7 @@ router.post('/stripe/confirm', [
     // Update order
     const order = await Order.findOneAndUpdate(
       { _id: orderId, userId },
-      { 
+      {
         paymentStatus: 'paid',
         status: 'confirmed'
       },
@@ -210,12 +210,12 @@ router.post('/momo/initiate', [
     // TODO: Integrate with actual Mobile Money API (MTN, Orange, etc.)
     // For now, simulate the process
     const transactionId = `MOMO_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // In a real implementation, you would:
     // 1. Call the Mobile Money API to initiate payment
     // 2. Store the transaction reference
     // 3. Set up webhook to receive payment confirmation
-    
+
     // Simulate successful initiation
     res.json({
       success: true,
@@ -265,7 +265,7 @@ router.post('/momo/callback', [
       // Update order as paid
       const order = await Order.findByIdAndUpdate(
         orderId,
-        { 
+        {
           paymentStatus: 'paid',
           status: 'confirmed'
         },
@@ -286,7 +286,7 @@ router.post('/momo/callback', [
     } else if (status === 'failed') {
       // Update order as payment failed
       await Order.findByIdAndUpdate(orderId, { paymentStatus: 'failed' });
-      
+
       res.json({
         success: true,
         message: 'Payment failed notification received'
@@ -332,7 +332,7 @@ router.post('/cash/confirm', [
     // Update order for cash on delivery
     const order = await Order.findOneAndUpdate(
       { _id: orderId, userId },
-      { 
+      {
         paymentStatus: 'pending', // Will be marked as paid upon delivery
         status: 'confirmed'
       },

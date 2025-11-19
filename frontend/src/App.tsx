@@ -40,7 +40,7 @@ function App() {
             <CartProvider>
               <Router>
                 <OrderSyncManager />
-                <div className="min-h-screen bg-gray-50">
+                <div className="min-h-screen bg-gray-50 overflow-x-hidden w-full">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/admin" element={<AdminRoute />} />

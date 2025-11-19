@@ -33,9 +33,9 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative text-white overflow-hidden">
+    <section className="relative text-white overflow-hidden w-full">
       {/* Background Image Carousel with Overlay */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 w-full">
         <AnimatePresence mode="wait">
           <motion.img
             key={currentImageIndex}
@@ -67,8 +67,8 @@ const Hero: React.FC = () => {
         ))}
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-32 w-full">
+        <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
           {/* Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}

@@ -17,7 +17,7 @@ const CheckoutModal: React.FC = () => {
   const { addOrder } = useData();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'momo' | 'cash'>('stripe');
+  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'momo' | 'om' | 'cash'>('momo');
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState({
     street: user?.address || '',
@@ -122,7 +122,7 @@ const CheckoutModal: React.FC = () => {
             (item.selectedToppings.length > 0 ? `  Garnitures: ${item.selectedToppings.map(t => t.name).join(', ')}\n` : '')
           ).join('') +
           `\n💰 *Total:* ${formatPrice(finalTotal)}\n` +
-          `💳 *Mode de paiement:* ${paymentMethod === 'momo' ? 'Mobile Money' : paymentMethod === 'cash' ? 'Espèces' : 'Carte bancaire'}\n\n` +
+          `💳 *Mode de paiement:* ${paymentMethod === 'momo' ? 'MTN Mobile Money' : paymentMethod === 'om' ? 'Orange Money' : paymentMethod === 'cash' ? 'Espèces' : 'Carte bancaire'}\n\n` +
           (deliveryAddress.instructions ? `📝 *Instructions:* ${deliveryAddress.instructions}\n\n` : '') +
           `Merci de confirmer la commande! 🙏`;
 
@@ -247,7 +247,7 @@ const CheckoutModal: React.FC = () => {
                         {t('checkout.paymentMethod')}
                       </h3>
                       <div className="space-y-3">
-                      
+
                         <label className="flex items-center p-4 border border-secondary-200 rounded-lg cursor-pointer hover:border-primary-300 transition-colors">
                           <input
                             type="radio"
@@ -258,20 +258,20 @@ const CheckoutModal: React.FC = () => {
                             className="mr-3"
                           />
                           <DevicePhoneMobileIcon className="w-5 h-5 mr-3 text-secondary-600" />
-                          <span className="font-medium">{t('checkout.mobileMoney')}</span>
+                          <span className="font-medium">MTN Mobile Money</span>
                         </label>
 
                         <label className="flex items-center p-4 border border-secondary-200 rounded-lg cursor-pointer hover:border-primary-300 transition-colors">
                           <input
                             type="radio"
                             name="paymentMethod"
-                            value="OM"
-                            checked={paymentMethod === 'momo'}
+                            value="om"
+                            checked={paymentMethod === 'om'}
                             onChange={(e) => setPaymentMethod(e.target.value as any)}
                             className="mr-3"
                           />
-                          <DevicePhoneMobileIcon className="w-5 h-5 mr-3 text-secondary-600" />
-                          <span className="font-medium">{t('checkout.mobileMoney')}</span>
+                          <DevicePhoneMobileIcon className="w-5 h-5 mr-3 text-orange-600" />
+                          <span className="font-medium">Orange Money</span>
                         </label>
 
                         <label className="flex items-center p-4 border border-secondary-200 rounded-lg cursor-pointer hover:border-primary-300 transition-colors">

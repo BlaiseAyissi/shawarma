@@ -183,7 +183,8 @@ const UserOrders: React.FC = () => {
   const getPaymentIcon = (method: string) => {
     switch (method) {
       case 'stripe': return <CreditCardIcon className="w-4 h-4" />;
-      case 'momo': return <DevicePhoneMobileIcon className="w-4 h-4" />;
+      case 'momo': return <DevicePhoneMobileIcon className="w-4 h-4 text-yellow-600" />;
+      case 'om': return <DevicePhoneMobileIcon className="w-4 h-4 text-orange-600" />;
       case 'cash': return <BanknotesIcon className="w-4 h-4" />;
       default: return <CreditCardIcon className="w-4 h-4" />;
     }
@@ -192,7 +193,8 @@ const UserOrders: React.FC = () => {
   const getPaymentText = (method: string) => {
     switch (method) {
       case 'stripe': return 'Carte bancaire';
-      case 'momo': return 'Mobile Money';
+      case 'momo': return 'MTN Mobile Money';
+      case 'om': return 'Orange Money';
       case 'cash': return 'Espèces';
       default: return method;
     }

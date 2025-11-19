@@ -532,9 +532,16 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         toast.success(`Commande ${newOrder.orderNumber} créée avec succès!`);
         return newOrder;
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating order:', error);
-      toast.error('Erreur lors de la création de la commande');
+      console.error('Error response:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      
+      // Show specific error message if available
+      const errorMessage = error.response?.data?.message || 
+                          error.response?.data?.errors?.[0]?.msg ||
+                          'Erreur lors de la création de la commande';
+      toast.error(errorMessage);
       throw error;
     }
   };

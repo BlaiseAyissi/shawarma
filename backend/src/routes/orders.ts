@@ -25,7 +25,7 @@ router.post('/', [
     .notEmpty()
     .withMessage('Size is required'),
   body('paymentMethod')
-    .isIn(['stripe', 'momo', 'cash'])
+    .isIn(['stripe', 'momo', 'om', 'cash'])
     .withMessage('Invalid payment method'),
   body('deliveryAddress.street')
     .trim()

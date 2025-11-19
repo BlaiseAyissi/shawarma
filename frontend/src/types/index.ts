@@ -69,7 +69,7 @@ export interface Order {
   deliveryFee: number;
   total: number;
   status: 'pending' | 'confirmed' | 'preparing' | 'ready' | 'out_for_delivery' | 'delivered' | 'cancelled';
-  paymentMethod: 'stripe' | 'momo' | 'cash';
+  paymentMethod: 'stripe' | 'momo' | 'om' | 'cash';
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   deliveryAddress: {
     street: string;
