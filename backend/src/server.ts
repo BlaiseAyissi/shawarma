@@ -22,14 +22,25 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL // production frontend
-];
+  process.env.FRONTEND_URL, // production frontend
+].filter(Boolean); // Remove undefined values
 
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        console.warn(`CORS blocked origin: ${origin}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    credentials: true
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization']
   })
 );
 
@@ -39,8 +50,8 @@ app.use(express.urlencoded({ extended: true }));
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
+  res.json({
+    status: 'OK',
     message: 'House of Shawarma API is running',
     timestamp: new Date().toISOString()
   });
@@ -48,7 +59,7 @@ app.get('/api/health', (req, res) => {
 
 // Basic test route
 app.get('/api/test', (req, res) => {
-  res.json({ 
+  res.json({
     message: 'API is working!',
     environment: process.env.NODE_ENV || 'development'
   });
@@ -73,7 +84,7 @@ console.log('All routes registered');
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
   console.error(err.stack);
-  res.status(500).json({ 
+  res.status(500).json({
     message: 'Something went wrong!',
     error: process.env.NODE_ENV === 'development' ? err.message : {}
   });
@@ -124,12 +135,12 @@ const connectDB = async () => {
 
 
 connectDB();
-  
-  //app.listen(PORT, () => {
-  //  console.log(`🚀 Server running on port ${PORT}`);
-  // console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-  //  console.log(`🔗 API URL: http://localhost:${PORT}/api`);
-  //  console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
-  //});
+
+//app.listen(PORT, () => {
+//  console.log(`🚀 Server running on port ${PORT}`);
+// console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+//  console.log(`🔗 API URL: http://localhost:${PORT}/api`);
+//  console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
+//});
 
 export default app;
