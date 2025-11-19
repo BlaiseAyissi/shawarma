@@ -1,9 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-//import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-const { MongoClient, ServerApiVersion } = require('mongodb');
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -29,9 +28,9 @@ app.use(
   cors({
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
-      console.log('the origin is '+origin)
+      console.log('the origin is ' + origin)
       if (!origin) return callback(null, true);
-      
+
       if (allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
@@ -98,34 +97,16 @@ app.use((req, res) => {
 });
 
 // Database connection
-let isConnected = false;
 const connectDB = async () => {
-  if (isConnected) return;
   try {
     const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/shawarma';
 
-    const client = new MongoClient(mongoURI, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      }
-    });
+    await mongoose.connect(mongoURI);
 
-    try {
-      // Connect the client to the server	(optional starting in v4.7)
-      await client.connect();
-      // Send a ping to confirm a successful connection
-      await client.db("admin").command({ ping: 1 });
-      isConnected = true;
-      console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally {
-      // Ensures that the client will close when you finish/error
-      await client.close();
-    }
+    console.log("✅ Successfully connected to MongoDB!");
+    console.log(`📊 Database: ${mongoose.connection.name}`);
 
   } catch (error) {
-
     console.error('❌ MongoDB connection error:', error);
     // Don't exit in development, just log the error
     if (process.env.NODE_ENV === 'production') {
@@ -134,6 +115,14 @@ const connectDB = async () => {
   }
 };
 
+// Handle connection events
+mongoose.connection.on('disconnected', () => {
+  console.log('⚠️ MongoDB disconnected');
+});
+
+mongoose.connection.on('error', (err) => {
+  console.error('❌ MongoDB error:', err);
+});
 
 connectDB();
 
