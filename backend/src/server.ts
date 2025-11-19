@@ -22,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL, // production frontend
+  `${process.env.FRONTEND_URL}/api`, // production frontend
 ].filter(Boolean); // Remove undefined values
 
 app.use(
