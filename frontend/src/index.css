@@ -61,3 +61,61 @@
     height: auto;
   }
 }
+
+/* Print Styles for Thermal Printers */
+@media print {
+  /* Hide everything except receipt */
+  body * {
+    visibility: hidden;
+  }
+  
+  .receipt-content, .receipt-content * {
+    visibility: visible;
+  }
+  
+  .receipt-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80mm; /* Standard thermal printer width */
+    margin: 0;
+    padding: 5mm;
+    background: white;
+  }
+  
+  /* Hide non-printable elements */
+  .no-print {
+    display: none !important;
+  }
+  
+  /* Optimize for thermal printing */
+  .receipt-content {
+    font-family: 'Courier New', monospace;
+    font-size: 12pt;
+    line-height: 1.4;
+    color: black;
+  }
+  
+  /* Ensure borders print */
+  .receipt-content * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  /* Page breaks */
+  .receipt-content {
+    page-break-after: always;
+  }
+  
+  /* Remove shadows and backgrounds for better printing */
+  .receipt-content {
+    box-shadow: none !important;
+    border: none !important;
+  }
+}
+
+/* Screen styles for receipt preview */
+.receipt-content {
+  font-family: 'Courier New', monospace;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}

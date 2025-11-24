@@ -21,33 +21,82 @@ const CheckoutModal: React.FC = () => {
   const [whatsappNumber, setWhatsappNumber] = useState('');
   const [deliveryAddress, setDeliveryAddress] = useState({
     street: user?.address || '',
+    neighborhood: '',
     city: '',
     phone: user?.phone || '',
     instructions: ''
   });
   const [errors, setErrors] = useState({
     street: false,
+    neighborhood: false,
     city: false,
     phone: false
   });
   const [touched, setTouched] = useState({
     street: false,
+    neighborhood: false,
     city: false,
     phone: false
   });
+  const [cities, setCities] = useState<string[]>([]);
+  const [neighborhoods, setNeighborhoods] = useState<string[]>([]);
+  const [deliveryFee, setDeliveryFee] = useState(500);
 
-  // Load WhatsApp number from settings
+  // Load WhatsApp number and cities
   useEffect(() => {
-    const loadSettings = async () => {
+    const loadData = async () => {
       try {
-        const settings = await settingsAPI.get();
+        const [settings, citiesList] = await Promise.all([
+          settingsAPI.get(),
+          import('../services/api').then(m => m.deliveryZonesAPI.getCities())
+        ]);
         setWhatsappNumber(settings.whatsappNumber);
+        setCities(citiesList);
       } catch (error) {
-        console.error('Error loading settings:', error);
+        console.error('Error loading data:', error);
       }
     };
-    loadSettings();
+    loadData();
   }, []);
+
+  // Load neighborhoods when city changes
+  useEffect(() => {
+    const loadNeighborhoods = async () => {
+      if (deliveryAddress.city) {
+        try {
+          const { deliveryZonesAPI } = await import('../services/api');
+          const neighborhoodsList = await deliveryZonesAPI.getNeighborhoods(deliveryAddress.city);
+          setNeighborhoods(neighborhoodsList);
+        } catch (error) {
+          console.error('Error loading neighborhoods:', error);
+          setNeighborhoods([]);
+        }
+      } else {
+        setNeighborhoods([]);
+      }
+    };
+    loadNeighborhoods();
+  }, [deliveryAddress.city]);
+
+  // Calculate delivery fee when city and neighborhood are selected
+  useEffect(() => {
+    const calculateFee = async () => {
+      if (deliveryAddress.city && deliveryAddress.neighborhood) {
+        try {
+          const { deliveryZonesAPI } = await import('../services/api');
+          const feeData = await deliveryZonesAPI.calculateFee(
+            deliveryAddress.city,
+            deliveryAddress.neighborhood
+          );
+          setDeliveryFee(feeData.deliveryFee);
+        } catch (error) {
+          console.error('Error calculating fee:', error);
+          setDeliveryFee(500); // Default fee
+        }
+      }
+    };
+    calculateFee();
+  }, [deliveryAddress.city, deliveryAddress.neighborhood]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('fr-FR', {
@@ -57,10 +106,9 @@ const CheckoutModal: React.FC = () => {
     }).format(price);
   };
 
-  const deliveryFee = 500;
   const finalTotal = total + deliveryFee;
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setDeliveryAddress({
       ...deliveryAddress,
@@ -93,13 +141,15 @@ const CheckoutModal: React.FC = () => {
   const validateForm = () => {
     const newErrors = {
       street: !deliveryAddress.street || deliveryAddress.street.trim().length < 5,
-      city: !deliveryAddress.city || deliveryAddress.city.trim().length < 2,
+      neighborhood: !deliveryAddress.neighborhood,
+      city: !deliveryAddress.city,
       phone: !deliveryAddress.phone || deliveryAddress.phone.trim().length === 0
     };
     
     setErrors(newErrors);
     setTouched({
       street: true,
+      neighborhood: true,
       city: true,
       phone: true
     });
@@ -132,6 +182,7 @@ const CheckoutModal: React.FC = () => {
         paymentMethod,
         deliveryAddress: {
           street: deliveryAddress.street,
+          neighborhood: deliveryAddress.neighborhood,
           city: deliveryAddress.city,
           phone: deliveryAddress.phone,
           instructions: deliveryAddress.instructions
@@ -205,9 +256,22 @@ const CheckoutModal: React.FC = () => {
       // Reset form
       setDeliveryAddress({
         street: user?.address || '',
+        neighborhood: '',
         city: '',
         phone: user?.phone || '',
         instructions: ''
+      });
+      setErrors({
+        street: false,
+        neighborhood: false,
+        city: false,
+        phone: false
+      });
+      setTouched({
+        street: false,
+        neighborhood: false,
+        city: false,
+        phone: false
       });
     } catch (error) {
       console.error('Order creation error:', error);
@@ -269,6 +333,56 @@ const CheckoutModal: React.FC = () => {
                       </h3>
                       <div className="space-y-4">
                         <div>
+                          <select
+                            name="city"
+                            value={deliveryAddress.city}
+                            onChange={(e) => {
+                              handleInputChange(e);
+                              setDeliveryAddress({ ...deliveryAddress, city: e.target.value, neighborhood: '' });
+                            }}
+                            onBlur={() => handleBlur('city')}
+                            required
+                            className={`input-field ${touched.city && errors.city ? 'border-red-500 ring-2 ring-red-200' : ''}`}
+                          >
+                            <option value="">Sélectionner une ville</option>
+                            {cities.map((city) => (
+                              <option key={city} value={city}>
+                                {city}
+                              </option>
+                            ))}
+                          </select>
+                          {touched.city && errors.city && (
+                            <p className="text-red-500 text-sm mt-1">La ville est obligatoire</p>
+                          )}
+                        </div>
+                        <div>
+                          <select
+                            name="neighborhood"
+                            value={deliveryAddress.neighborhood}
+                            onChange={handleInputChange}
+                            onBlur={() => handleBlur('neighborhood')}
+                            required
+                            disabled={!deliveryAddress.city || neighborhoods.length === 0}
+                            className={`input-field ${touched.neighborhood && errors.neighborhood ? 'border-red-500 ring-2 ring-red-200' : ''} ${!deliveryAddress.city || neighborhoods.length === 0 ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                          >
+                            <option value="">
+                              {!deliveryAddress.city 
+                                ? 'Sélectionner d\'abord une ville' 
+                                : neighborhoods.length === 0 
+                                ? 'Chargement...' 
+                                : 'Sélectionner un quartier'}
+                            </option>
+                            {neighborhoods.map((neighborhood) => (
+                              <option key={neighborhood} value={neighborhood}>
+                                {neighborhood}
+                              </option>
+                            ))}
+                          </select>
+                          {touched.neighborhood && errors.neighborhood && (
+                            <p className="text-red-500 text-sm mt-1">Le quartier est obligatoire</p>
+                          )}
+                        </div>
+                        <div>
                           <input
                             type="text"
                             name="street"
@@ -277,25 +391,10 @@ const CheckoutModal: React.FC = () => {
                             onBlur={() => handleBlur('street')}
                             required
                             className={`input-field ${touched.street && errors.street ? 'border-red-500 ring-2 ring-red-200' : ''}`}
-                            placeholder="Rue, quartier..."
+                            placeholder="Numéro et nom de rue..."
                           />
                           {touched.street && errors.street && (
                             <p className="text-red-500 text-sm mt-1">L'adresse doit contenir au moins 5 caractères</p>
-                          )}
-                        </div>
-                        <div>
-                          <input
-                            type="text"
-                            name="city"
-                            value={deliveryAddress.city}
-                            onChange={handleInputChange}
-                            onBlur={() => handleBlur('city')}
-                            required
-                            className={`input-field ${touched.city && errors.city ? 'border-red-500 ring-2 ring-red-200' : ''}`}
-                            placeholder="Ville"
-                          />
-                          {touched.city && errors.city && (
-                            <p className="text-red-500 text-sm mt-1">La ville est obligatoire</p>
                           )}
                         </div>
                         <div>

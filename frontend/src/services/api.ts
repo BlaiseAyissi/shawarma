@@ -163,4 +163,47 @@ export const settingsAPI = {
   }
 };
 
+// Delivery Zones API
+export const deliveryZonesAPI = {
+  getCities: async () => {
+    const response = await api.get('/delivery-zones/cities');
+    return response.data.data.cities;
+  },
+
+  getNeighborhoods: async (city: string) => {
+    const response = await api.get(`/delivery-zones/neighborhoods/${city}`);
+    return response.data.data.neighborhoods;
+  },
+
+  calculateFee: async (city: string, neighborhood: string) => {
+    const response = await api.post('/delivery-zones/calculate-fee', { city, neighborhood });
+    return response.data.data;
+  },
+
+  getAll: async () => {
+    const response = await api.get('/delivery-zones');
+    return response.data.data.zones;
+  },
+
+  getAllAdmin: async () => {
+    const response = await api.get('/delivery-zones/admin/all');
+    return response.data.data.zones;
+  },
+
+  create: async (zoneData: any) => {
+    const response = await api.post('/delivery-zones', zoneData);
+    return response.data.data.zone;
+  },
+
+  update: async (id: string, zoneData: any) => {
+    const response = await api.put(`/delivery-zones/${id}`, zoneData);
+    return response.data.data.zone;
+  },
+
+  delete: async (id: string) => {
+    const response = await api.delete(`/delivery-zones/${id}`);
+    return response.data;
+  }
+};
+
 export default api;

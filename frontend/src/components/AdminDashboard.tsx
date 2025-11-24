@@ -6,7 +6,8 @@ import {
   TagIcon,
   SparklesIcon,
   XCircleIcon,
-  CogIcon
+  CogIcon,
+  MapPinIcon
 } from '@heroicons/react/24/outline';
 import { useAuth } from '../context/AuthContext';
 import DashboardOverview from './admin/DashboardOverview';
@@ -15,6 +16,7 @@ import MenuManagement from './admin/MenuManagement';
 import CategoryManagement from './admin/CategoryManagement';
 import ToppingManagement from './admin/ToppingManagement';
 import SettingsManagement from './admin/SettingsManagement';
+import DeliveryZonesManager from './DeliveryZonesManager';
 import AdminAuthTest from './AdminAuthTest';
 import OrderSyncIndicator from './OrderSyncIndicator';
 
@@ -28,6 +30,7 @@ const AdminDashboard: React.FC = () => {
     { id: 'menu', name: 'Menu', icon: Squares2X2Icon },
     { id: 'categories', name: 'Catégories', icon: TagIcon },
     { id: 'toppings', name: 'Garnitures', icon: SparklesIcon },
+    { id: 'delivery-zones', name: 'Zones de Livraison', icon: MapPinIcon },
     { id: 'settings', name: 'Paramètres', icon: CogIcon },
   ];
 
@@ -43,6 +46,8 @@ const AdminDashboard: React.FC = () => {
         return <CategoryManagement />;
       case 'toppings':
         return <ToppingManagement />;
+      case 'delivery-zones':
+        return <DeliveryZonesManager />;
       case 'settings':
         return <SettingsManagement />;
       default:

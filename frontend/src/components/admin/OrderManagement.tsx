@@ -7,11 +7,13 @@ import {
   XCircleIcon,
   FunnelIcon,
   MagnifyingGlassIcon,
-  XMarkIcon
+  XMarkIcon,
+  PrinterIcon
 } from '@heroicons/react/24/outline';
 import { useNotifications } from '../../context/NotificationContext';
 import { useData } from '../../context/DataContext';
 import { Order, OrderItem } from '../../types';
+import OrderReceipt from '../OrderReceipt';
 import toast from 'react-hot-toast';
 
 const OrderManagement: React.FC = () => {
@@ -22,6 +24,7 @@ const OrderManagement: React.FC = () => {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [showReceipt, setShowReceipt] = useState(false);
   // Initialize filtered orders
   useEffect(() => {
     setFilteredOrders(allOrders);
@@ -325,12 +328,21 @@ const OrderManagement: React.FC = () => {
                       {formatDate(selectedOrder.createdAt)}
                     </p>
                   </div>
-                  <button
-                    onClick={() => setSelectedOrder(null)}
-                    className="p-2 text-secondary-400 hover:text-secondary-600 transition-colors"
-                  >
-                    <XMarkIcon className="w-6 h-6" />
-                  </button>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => setShowReceipt(true)}
+                      className="btn-primary flex items-center space-x-2"
+                    >
+                      <PrinterIcon className="w-5 h-5" />
+                      <span>Imprimer</span>
+                    </button>
+                    <button
+                      onClick={() => setSelectedOrder(null)}
+                      className="p-2 text-secondary-400 hover:text-secondary-600 transition-colors"
+                    >
+                      <XMarkIcon className="w-6 h-6" />
+                    </button>
+                  </div>
                 </div>
 
                 <div className="p-6">
@@ -406,6 +418,34 @@ const OrderManagement: React.FC = () => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* Receipt Modal */}
+      <AnimatePresence>
+        {showReceipt && selectedOrder && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowReceipt(false)}
+              className="fixed inset-0 bg-black bg-opacity-50 z-50"
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
+            >
+              <div className="bg-gray-100 rounded-2xl shadow-2xl max-w-2xl w-full p-6">
+                <OrderReceipt 
+                  order={selectedOrder} 
+                  onClose={() => setShowReceipt(false)}
+                />
               </div>
             </motion.div>
           </>

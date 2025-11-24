@@ -2,6 +2,7 @@ import express, { Request, Response } from 'express';
 import { body, query, validationResult } from 'express-validator';
 import Order from '../models/Order';
 import Product from '../models/Product';
+import DeliveryZone from '../models/DeliveryZone';
 import { auth, adminAuth } from '../middleware/auth';
 
 const router = express.Router();
@@ -31,6 +32,10 @@ router.post('/', [
     .trim()
     .isLength({ min: 5 })
     .withMessage('Street address is required'),
+  body('deliveryAddress.neighborhood')
+    .trim()
+    .notEmpty()
+    .withMessage('Neighborhood is required'),
   body('deliveryAddress.city')
     .trim()
     .isLength({ min: 2 })
@@ -122,8 +127,25 @@ router.post('/', [
       });
     }
 
-    const deliveryFee = 500; // Fixed delivery fee
+    // Get delivery fee from zone
+    const deliveryZone = await DeliveryZone.findOne({ 
+      available: true,
+      cities: deliveryAddress.city,
+      'neighborhoods.city': deliveryAddress.city,
+      'neighborhoods.name': deliveryAddress.neighborhood,
+      'neighborhoods.available': true
+    });
+
+    if (!deliveryZone) {
+      return res.status(400).json({
+        success: false,
+        message: `Delivery not available for ${deliveryAddress.neighborhood}, ${deliveryAddress.city}`
+      });
+    }
+
+    const deliveryFee = deliveryZone.deliveryFee;
     const total = subtotal + deliveryFee;
+    const estimatedDeliveryTime = new Date(Date.now() + deliveryZone.estimatedTime * 60 * 1000);
 
     // Create order
     const order = new Order({
@@ -134,7 +156,7 @@ router.post('/', [
       total,
       paymentMethod,
       deliveryAddress,
-      estimatedDeliveryTime: new Date(Date.now() + 45 * 60 * 1000) // 45 minutes from now
+      estimatedDeliveryTime
     });
 
     await order.save();

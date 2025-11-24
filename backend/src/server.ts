@@ -10,6 +10,7 @@ import productsRoutes from './routes/products';
 import ordersRoutes from './routes/orders';
 import categoriesRoutes from './routes/categories';
 import toppingsRoutes from './routes/toppings';
+import deliveryZonesRoutes from './routes/deliveryZones';
 const settingsRoutes = require('./routes/settings').default || require('./routes/settings');
 
 dotenv.config();
@@ -79,6 +80,7 @@ console.log('Settings routes:', settingsRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/categories', categoriesRoutes);
 app.use('/api/toppings', toppingsRoutes);
+app.use('/api/delivery-zones', deliveryZonesRoutes);
 console.log('All routes registered');
 
 // Error handling middleware
@@ -124,13 +126,20 @@ mongoose.connection.on('error', (err) => {
   console.error('❌ MongoDB error:', err);
 });
 
-connectDB();
+connectDB(); //change back for dep
 
-//app.listen(PORT, () => {
-//  console.log(`🚀 Server running on port ${PORT}`);
-// console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
-//  console.log(`🔗 API URL: http://localhost:${PORT}/api`);
-//  console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
-//});
+export default app;  //change back for dep
 
-export default app;
+// Start server
+//const startServer = async () => {
+//  await connectDB();
+//
+//  app.listen(PORT, () => {
+//    console.log(`🚀 Server running on port ${PORT}`);
+//    console.log(`📱 Frontend URL: ${process.env.FRONTEND_URL || 'http://localhost:3000'}`);
+//    console.log(`🔗 API URL: http://localhost:${PORT}/api`);
+//    console.log(`🏥 Health check: http://localhost:${PORT}/api/health`);
+//  });
+//};
+
+//startServer().catch(console.error);

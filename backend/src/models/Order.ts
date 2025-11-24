@@ -26,6 +26,7 @@ export interface IOrder extends Document {
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   deliveryAddress: {
     street: string;
+    neighborhood: string;
     city: string;
     postalCode?: string;
     phone: string;
@@ -118,6 +119,7 @@ const OrderSchema = new Schema<IOrder>({
   },
   deliveryAddress: {
     street: { type: String, required: true },
+    neighborhood: { type: String, required: true },
     city: { type: String, required: true },
     postalCode: String,
     phone: { type: String, required: true },

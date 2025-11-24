@@ -73,6 +73,7 @@ export interface Order {
   paymentStatus: 'pending' | 'paid' | 'failed' | 'refunded';
   deliveryAddress: {
     street: string;
+    neighborhood: string;
     city: string;
     postalCode?: string;
     phone: string;
@@ -89,4 +90,22 @@ export interface AuthState {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+}
+
+export interface Neighborhood {
+  name: string;
+  city: string;
+  available: boolean;
+}
+
+export interface DeliveryZone {
+  _id: string;
+  name: string;
+  cities: string[];
+  neighborhoods: Neighborhood[];
+  deliveryFee: number;
+  estimatedTime: number;
+  available: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
